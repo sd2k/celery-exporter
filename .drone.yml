@@ -1,0 +1,37 @@
+---
+# Build and push 'latest' Docker image.
+
+kind: pipeline
+name: Docker build
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  # Push the docker image on main/tags.
+  - name: Push Docker Image
+    image: plugins/docker
+    settings:
+      repo: us.gcr.io/kubernetes-dev/celery-exporter
+      config:
+        from_secret: dockerconfigjson
+      build_args:
+        - DOCKER_REPO=grafana/celery-exporter
+        - DOCKER_VERSION=latest
+        - VCS_REF=$DRONE_COMMIT_SHA
+      tags:
+        - latest
+    when:
+      ref:
+        - refs/heads/master
+        - refs/heads/add-drone
+        - refs/tags/v*.*.*
+
+---
+# Secret for pushing docker images.
+kind: secret
+name: dockerconfigjson
+get:
+  path: infra/data/ci/gcr-admin
+  name: .dockerconfigjson

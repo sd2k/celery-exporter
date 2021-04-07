@@ -50,13 +50,11 @@ RUN pip wheel . -w /src/wheelhouse
 FROM base-image as app
 LABEL maintainer="Fabio Todaro <ft@ovalmoney.com>"
 
-ARG BUILD_DATE
 ARG DOCKER_REPO
 ARG VERSION
 ARG VCS_REF
 
 LABEL org.label-schema.schema-version="1.0" \
-      org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name=$DOCKER_REPO \
       org.label-schema.version=$VERSION \
       org.label-schema.description="Prometheus metrics exporter for Celery" \
